@@ -8,17 +8,17 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 36 39% 96%;
+    --background: 0 0% 100%;
     --foreground: 25 20% 25%;
 
-    --card: 0 0% 100%;
+    --card: 142 25% 97%;
     --card-foreground: 25 20% 25%;
 
-    --popover: 0 0% 100%;
+    --popover: 142 25% 97%;
     --popover-foreground: 25 20% 25%;
 
     --primary: 25 35% 45%;
-    --primary-foreground: 36 39% 96%;
+    --primary-foreground: 0 0% 100%;
 
     --secondary: 36 33% 88%;
     --secondary-foreground: 25 20% 25%;
@@ -30,16 +30,16 @@ All colors MUST be HSL.
     --accent-foreground: 25 20% 25%;
 
     --destructive: 0 60% 50%;
-    --destructive-foreground: 36 39% 96%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 36 20% 82%;
-    --input: 36 20% 82%;
+    --border: 48 8% 85%;
+    --input: 48 8% 85%;
     --ring: 25 35% 45%;
 
     --radius: 0.75rem;
     
     --memorial-hero: 25 30% 40%;
-    --memorial-soft: 36 39% 96%;
+    --memorial-soft: 142 25% 97%;
     --memorial-warm: 28 40% 78%;
     --memorial-text-light: 36 10% 70%;
     

@@ -7,9 +7,17 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Play, Pause, Volume2 } from "lucide-react";
+import { Play, Pause, Volume2, SkipBack, SkipForward } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import heroDefault from "@/assets/hero-memorial.jpg";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { Slider } from "@/components/ui/slider";
 
 interface Memorial {
   id: string;
@@ -56,6 +64,9 @@ const Memorial = () => {
   const [tributes, setTributes] = useState<Tribute[]>([]);
   const [loading, setLoading] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [volume, setVolume] = useState(50);
 
   // Tribute form
   const [tributeName, setTributeName] = useState("");
@@ -126,6 +137,59 @@ const Memorial = () => {
       }
       setIsPlaying(!isPlaying);
     }
+  };
+
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      setCurrentTime(audioRef.current.currentTime);
+    }
+  };
+
+  const handleLoadedMetadata = () => {
+    if (audioRef.current) {
+      setDuration(audioRef.current.duration);
+    }
+  };
+
+  const handleSeek = (value: number[]) => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = value[0];
+      setCurrentTime(value[0]);
+    }
+  };
+
+  const handleVolumeChange = (value: number[]) => {
+    if (audioRef.current) {
+      const newVolume = value[0];
+      setVolume(newVolume);
+      audioRef.current.volume = newVolume / 100;
+    }
+  };
+
+  const handleSkipForward = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = Math.min(
+        audioRef.current.currentTime + 10,
+        duration
+      );
+    }
+  };
+
+  const handleSkipBackward = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = Math.max(
+        audioRef.current.currentTime - 10,
+        0
+      );
+    }
+  };
+
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes.toString().padStart(2, "0")}:${seconds
+      .toString()
+      .padStart(2, "0")}`;
   };
 
   const handleSubmitTribute = async (e: React.FormEvent) => {
@@ -264,21 +328,113 @@ const Memorial = () => {
         {memorial.music_file && (
           <Card className="p-8 mb-12">
             <h2 className="text-3xl font-semibold text-center mb-8 text-primary">Música</h2>
-            {memorial.music_name && (
-              <p className="text-center text-muted-foreground mb-6">{memorial.music_name}</p>
+            
+            {memorial.life_story && (
+              <p className="text-center text-muted-foreground mb-6 max-w-2xl mx-auto">
+                {memorial.life_story.substring(0, 200)}...
+              </p>
             )}
-            <div className="flex justify-center items-center gap-4">
-              <Button
-                size="icon"
-                variant="outline"
-                onClick={handlePlayPause}
-                className="h-16 w-16 rounded-full"
-              >
-                {isPlaying ? <Pause className="h-8 w-8" /> : <Play className="h-8 w-8" />}
-              </Button>
-              <Volume2 className="h-6 w-6 text-muted-foreground" />
+
+            {/* Photo Carousel */}
+            {photos.length > 0 && (
+              <div className="mb-8 max-w-3xl mx-auto">
+                <Carousel className="w-full">
+                  <CarouselContent>
+                    {photos.map((photo) => (
+                      <CarouselItem key={photo.id} className="md:basis-1/2 lg:basis-1/3">
+                        <div className="p-2">
+                          <img
+                            src={photo.photo_url}
+                            alt="Memória"
+                            className="w-full aspect-square object-cover rounded-lg shadow-md"
+                          />
+                        </div>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious />
+                  <CarouselNext />
+                </Carousel>
+              </div>
+            )}
+
+            {/* Music Player */}
+            <div className="bg-background rounded-lg p-6 max-w-3xl mx-auto border">
+              <div className="flex items-center gap-6 mb-4">
+                {/* Music Info */}
+                <div className="flex-shrink-0">
+                  <p className="font-semibold text-foreground">{memorial.music_name || "Música"}</p>
+                  <p className="text-sm text-muted-foreground">
+                    Composição personalizada criada especialmente para Maria Lucia de Souza
+                  </p>
+                </div>
+
+                {/* Player Controls */}
+                <div className="flex items-center gap-2 mx-auto">
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={handleSkipBackward}
+                    className="h-10 w-10"
+                  >
+                    <SkipBack className="h-5 w-5" />
+                  </Button>
+                  <Button
+                    size="icon"
+                    variant="outline"
+                    onClick={handlePlayPause}
+                    className="h-12 w-12 rounded-full"
+                  >
+                    {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
+                  </Button>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={handleSkipForward}
+                    className="h-10 w-10"
+                  >
+                    <SkipForward className="h-5 w-5" />
+                  </Button>
+                </div>
+
+                {/* Volume Control */}
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <Volume2 className="h-5 w-5 text-muted-foreground" />
+                  <Slider
+                    value={[volume]}
+                    onValueChange={handleVolumeChange}
+                    max={100}
+                    step={1}
+                    className="w-24"
+                  />
+                </div>
+              </div>
+
+              {/* Timeline */}
+              <div className="flex items-center gap-4">
+                <span className="text-sm text-muted-foreground w-12 text-right">
+                  {formatTime(currentTime)}
+                </span>
+                <Slider
+                  value={[currentTime]}
+                  onValueChange={handleSeek}
+                  max={duration || 100}
+                  step={0.1}
+                  className="flex-1"
+                />
+                <span className="text-sm text-muted-foreground w-12">
+                  {formatTime(duration)}
+                </span>
+              </div>
             </div>
-            <audio ref={audioRef} src={memorial.music_file} className="hidden" />
+
+            <audio
+              ref={audioRef}
+              src={memorial.music_file}
+              onTimeUpdate={handleTimeUpdate}
+              onLoadedMetadata={handleLoadedMetadata}
+              className="hidden"
+            />
           </Card>
         )}
 
