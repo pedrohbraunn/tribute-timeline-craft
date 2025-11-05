@@ -1,0 +1,109 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 25 20% 25%;
+
+    --card: 142 25% 97%;
+    --card-foreground: 25 20% 25%;
+
+    --popover: 142 25% 97%;
+    --popover-foreground: 25 20% 25%;
+
+    --primary: 25 35% 45%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 36 33% 88%;
+    --secondary-foreground: 25 20% 25%;
+
+    --muted: 36 33% 88%;
+    --muted-foreground: 25 15% 50%;
+
+    --accent: 28 40% 78%;
+    --accent-foreground: 25 20% 25%;
+
+    --destructive: 0 60% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 48 8% 85%;
+    --input: 48 8% 85%;
+    --ring: 25 35% 45%;
+
+    --radius: 0.75rem;
+    
+    --memorial-hero: 25 30% 40%;
+    --memorial-soft: 142 25% 97%;
+    --memorial-warm: 28 40% 78%;
+    --memorial-text-light: 36 10% 70%;
+    
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 25 20% 12%;
+    --foreground: 36 39% 96%;
+
+    --card: 25 20% 15%;
+    --card-foreground: 36 39% 96%;
+
+    --popover: 25 20% 15%;
+    --popover-foreground: 36 39% 96%;
+
+    --primary: 28 40% 78%;
+    --primary-foreground: 25 20% 15%;
+
+    --secondary: 25 15% 22%;
+    --secondary-foreground: 36 39% 96%;
+
+    --muted: 25 15% 22%;
+    --muted-foreground: 36 20% 65%;
+
+    --accent: 25 35% 45%;
+    --accent-foreground: 36 39% 96%;
+
+    --destructive: 0 60% 50%;
+    --destructive-foreground: 36 39% 96%;
+
+    --border: 25 15% 25%;
+    --input: 25 15% 25%;
+    --ring: 28 40% 78%;
+    
+    --memorial-hero: 28 40% 78%;
+    --memorial-soft: 25 20% 15%;
+    --memorial-warm: 25 35% 45%;
+    --memorial-text-light: 36 20% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
