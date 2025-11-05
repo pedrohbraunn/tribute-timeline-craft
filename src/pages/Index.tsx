@@ -12,6 +12,10 @@ import { Heart, Camera, Music, Clock, MessageCircle, QrCode, LogOut, User, Shiel
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import heroImage from "@/assets/hero-memorial.jpg";
+import casalIlustracao from "@/assets/home/casal-ilustracao.jpg";
+import passo1Hands from "@/assets/home/passo1-hands.png";
+import passo2Placa from "@/assets/home/passo2-placa.png";
+import passo3PlacaRosa from "@/assets/home/passo3-placa-rosa.jpg";
 
 const Index = () => {
   const [user, setUser] = useState<any>(null);
@@ -48,53 +52,78 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="absolute top-0 right-0 p-6 z-10">
-        {user ? (
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 text-white bg-black/30 px-4 py-2 rounded-full backdrop-blur-sm">
-              <User className="h-4 w-4" />
-              <span className="text-sm">{user.email}</span>
+      {/* Navbar */}
+      <nav className="fixed top-0 left-0 right-0 bg-white border-b z-50 shadow-sm">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            {/* Logo */}
+            <div className="flex items-center gap-2">
+              <Heart className="h-6 w-6 text-primary" />
+              <div>
+                <h1 className="text-xl font-bold text-primary">ETERNO RECORDAR</h1>
+                <p className="text-xs text-muted-foreground italic">Amor que transcende o tempo</p>
+              </div>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleSignOut}
-              className="bg-white/10 hover:bg-white/20 text-white border-white/30"
-            >
-              <LogOut className="h-4 w-4 mr-2" />
-              Sair
-            </Button>
+
+            {/* Navigation Links */}
+            <div className="hidden md:flex items-center gap-6">
+              <a href="#como-funciona" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                Como funciona
+              </a>
+              <a href="#planos" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                Planos
+              </a>
+              <a href="#depoimentos" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                Depoimentos
+              </a>
+              <a href="#parceiros" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                Parceiros
+              </a>
+              <a href="#contato" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                Contato
+              </a>
+
+              {user ? (
+                <div className="flex items-center gap-3">
+                  <span className="text-xs text-muted-foreground">{user.email}</span>
+                  <Button variant="outline" size="sm" onClick={handleSignOut}>
+                    Sair
+                  </Button>
+                </div>
+              ) : null}
+
+              <Button
+                size="sm"
+                className="bg-primary hover:bg-primary/90"
+                onClick={handleCreateMemorial}
+              >
+                Criar Memorial
+              </Button>
+            </div>
           </div>
-        ) : (
-          <Link to="/auth">
-            <Button variant="outline" className="bg-white/10 hover:bg-white/20 text-white border-white/30">
-              Entrar
-            </Button>
-          </Link>
-        )}
-      </header>
+        </div>
+      </nav>
 
       {/* Hero Section */}
       <section
-        className="relative h-[80vh] bg-cover bg-center flex items-center justify-center"
+        className="relative min-h-[90vh] bg-cover bg-center flex items-center justify-center pt-24"
         style={{
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)), url(${heroImage})`,
+          backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), url(${heroImage})`,
         }}
       >
-        <div className="text-center text-white px-6 max-w-4xl">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+        <div className="text-center px-6 max-w-4xl">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight text-gray-800">
             Transforme Uma Memória<br />Em Uma Recordação Eterna.
           </h1>
-          <p className="text-lg md:text-xl mb-12 text-white/90 max-w-3xl mx-auto">
+          <p className="text-base md:text-lg mb-12 text-gray-600 max-w-2xl mx-auto">
             O primeiro memorial online que transforma a história de quem você ama
-            em uma experiência viva com música exclusiva, fotos e memórias que
-            atravessam gerações, tudo isso com apenas um QR Code.
+            em uma experiência viva - com música exclusiva, fotos e memórias que
+            atravessam gerações, tudo isso com apenas um Qr Code.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               size="lg"
-              className="text-lg px-12 py-6 bg-primary hover:bg-primary/90"
+              className="text-base px-10 py-6 bg-primary hover:bg-primary/90 rounded-md"
               onClick={handleCreateMemorial}
             >
               Criar Meu Memorial Agora
@@ -102,7 +131,7 @@ const Index = () => {
             <Button
               size="lg"
               variant="outline"
-              className="text-lg px-12 py-6 bg-white/10 hover:bg-white/20 text-white border-white/30"
+              className="text-base px-10 py-6 border-2 rounded-md"
               onClick={() => navigate("/exemplos")}
             >
               Ver Exemplos
@@ -112,126 +141,133 @@ const Index = () => {
       </section>
 
       {/* Saudade Section */}
-      <section className="py-20 px-6 bg-secondary/10">
+      <section className="py-20 px-6 bg-white">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary leading-tight">
-                O Tempo Não Apaga<br />A Saudade. Mas Pode<br />Apagar As Memórias.
+              <h2 className="text-3xl md:text-4xl font-bold mb-8 text-gray-800 leading-tight">
+                O tempo não apaga<br />a saudade. Mas pode<br />apagar as memórias.
               </h2>
-              <p className="text-lg text-muted-foreground mb-6">
+            </div>
+            <div className="space-y-6">
+              <p className="text-base text-gray-600">
                 Imagine abrir o memorial de quem você ama e ser recebido
                 por uma música criada especialmente para ela. Uma trilha
                 sonora única que captura a essência da sua história.
               </p>
-              <p className="text-lg text-muted-foreground mb-6">
+              <p className="text-base text-gray-600">
                 Fotos, vídeos e momentos organizados em uma linha do
-                tempo interativa acessível de qualquer lugar do mundo, a
+                tempo interativa - acessível de qualquer lugar do mundo, a
                 qualquer momento. E uma placa com QR Code no túmulo que
                 permite que qualquer pessoa conheça o legado dessa vida
                 extraordinária com um simples toque.
               </p>
-              <p className="text-xl font-semibold text-primary mb-8">
+              <p className="text-base font-semibold text-gray-800">
                 O Eterno Recordar não é apenas um site.<br />
                 É um santuário digital onde a saudade encontra
                 beleza, e cada lembrança ganha vida.
               </p>
               <Button
                 size="lg"
-                className="text-lg px-12 py-6"
+                className="text-base px-10 py-6 bg-primary hover:bg-primary/90 rounded-md mt-6"
                 onClick={handleCreateMemorial}
               >
                 Criar Memorial Agora
               </Button>
             </div>
-            <div className="flex justify-center">
-              <div className="text-center">
-                <p className="text-6xl mb-4">👴👵</p>
-                <p className="text-lg text-muted-foreground italic">
-                  O tempo não apaga<br />a saudade. Mas pode<br />apagar as memórias.
-                </p>
-              </div>
-            </div>
+          </div>
+          <div className="mt-12 flex justify-center">
+            <img
+              src={casalIlustracao}
+              alt="Casal ilustração"
+              className="w-64 h-auto object-contain"
+            />
           </div>
         </div>
       </section>
 
       {/* Benefits Section */}
-      <section className="py-20 px-6">
+      <section className="py-20 px-6 bg-gray-50">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-16 text-primary">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-8 text-gray-800">
             Mais Que Um Memorial.<br />Uma Ponte Entre Gerações.
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="p-8 hover:shadow-xl transition-shadow">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
-                <Shield className="h-8 w-8 text-primary" />
+          {/* Decorative vertical line */}
+          <div className="flex justify-center mb-12">
+            <div className="relative h-32">
+              <div className="w-0.5 h-full bg-gray-300 mx-auto"></div>
+              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-primary rotate-45"></div>
+              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-primary rotate-45"></div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <Card className="p-6 bg-white border hover:shadow-lg transition-shadow">
+              <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mb-4">
+                <span className="text-xs font-bold text-gray-600">01</span>
               </div>
-              <div className="flex items-start gap-2 mb-3">
-                <span className="text-primary font-bold text-2xl">01</span>
-                <h3 className="text-xl font-semibold">Preservação<br />Eterna e Segura</h3>
-              </div>
-              <p className="text-muted-foreground">
+              <h3 className="text-lg font-bold mb-2 text-gray-800">
+                Preservação<br />Eterna e Segura
+              </h3>
+              <p className="text-sm text-gray-600">
                 Suas memórias em um único lugar protegido, acessível para sempre.
                 Sem risco de perder arquivos ou fotos deterioradas pelo tempo.
               </p>
             </Card>
 
-            <Card className="p-8 hover:shadow-xl transition-shadow">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
-                <Globe className="h-8 w-8 text-primary" />
+            <Card className="p-6 bg-white border hover:shadow-lg transition-shadow">
+              <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mb-4">
+                <span className="text-xs font-bold text-gray-600">02</span>
               </div>
-              <div className="flex items-start gap-2 mb-3">
-                <span className="text-primary font-bold text-2xl">02</span>
-                <h3 className="text-xl font-semibold">Conexão Familiar<br />Sem Fronteiras</h3>
-              </div>
-              <p className="text-muted-foreground">
+              <h3 className="text-lg font-bold mb-2 text-gray-800">
+                Conexão Familiar<br />Sem Fronteiras
+              </h3>
+              <p className="text-sm text-gray-600">
                 Familiares e amigos de qualquer lugar do mundo podem visitar o
                 memorial, deixar mensagens e se conectar através das lembranças
                 compartilhadas.
               </p>
             </Card>
 
-            <Card className="p-8 hover:shadow-xl transition-shadow">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
-                <Sparkles className="h-8 w-8 text-primary" />
+            <Card className="p-6 bg-white border hover:shadow-lg transition-shadow">
+              <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mb-4">
+                <span className="text-xs font-bold text-gray-600">03</span>
               </div>
-              <div className="flex items-start gap-2 mb-3">
-                <span className="text-primary font-bold text-2xl">03</span>
-                <h3 className="text-xl font-semibold">Uma Homenagem<br />Multissensorial</h3>
-              </div>
-              <p className="text-muted-foreground">
+              <h3 className="text-lg font-bold mb-2 text-gray-800">
+                Uma Homenagem<br />Multissensorial
+              </h3>
+              <p className="text-sm text-gray-600">
                 Não apenas fotos. Uma experiência completa com música, vídeos,
                 histórias escritas e uma linha do tempo que conta a jornada completa
                 dessa vida.
               </p>
             </Card>
+          </div>
 
-            <Card className="p-8 hover:shadow-xl transition-shadow">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
-                <MapPin className="h-8 w-8 text-primary" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            <Card className="p-6 bg-white border hover:shadow-lg transition-shadow">
+              <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mb-4">
+                <span className="text-xs font-bold text-gray-600">04</span>
               </div>
-              <div className="flex items-start gap-2 mb-3">
-                <span className="text-primary font-bold text-2xl">04</span>
-                <h3 className="text-xl font-semibold">Acesso Direto no<br />Local da Saudade</h3>
-              </div>
-              <p className="text-muted-foreground">
+              <h3 className="text-lg font-bold mb-2 text-gray-800">
+                Acesso Direto no<br />Local da Saudade
+              </h3>
+              <p className="text-sm text-gray-600">
                 A placa com QR Code no túmulo permite que visitantes conheçam a
                 história completa com um simples toque no celular. Uma ponte entre o
                 físico e o eterno.
               </p>
             </Card>
 
-            <Card className="p-8 hover:shadow-xl transition-shadow md:col-span-2 lg:col-span-1">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
-                <Users className="h-8 w-8 text-primary" />
+            <Card className="p-6 bg-white border hover:shadow-lg transition-shadow">
+              <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mb-4">
+                <span className="text-xs font-bold text-gray-600">05</span>
               </div>
-              <div className="flex items-start gap-2 mb-3">
-                <span className="text-primary font-bold text-2xl">05</span>
-                <h3 className="text-xl font-semibold">Legado para<br />Futuras Gerações</h3>
-              </div>
-              <p className="text-muted-foreground">
+              <h3 className="text-lg font-bold mb-2 text-gray-800">
+                Legado para<br />Futuras Gerações
+              </h3>
+              <p className="text-sm text-gray-600">
                 Seus netos e bisnetos poderão conhecer a história dos avós que
                 nunca conheceram. O memorial atravessa o tempo e mantém viva a
                 essência familiar.
@@ -242,50 +278,80 @@ const Index = () => {
       </section>
 
       {/* How it Works Section */}
-      <section id="como-funciona" className="py-20 px-6 bg-secondary/30">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-16 text-primary">
+      <section id="como-funciona" className="py-20 px-6 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 text-gray-800">
             Como funciona
           </h2>
 
-          <div className="space-y-12">
-            <div className="flex flex-col md:flex-row items-start gap-8">
-              <div className="w-16 h-16 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-2xl font-bold shrink-0">
-                1
+          <div className="space-y-20">
+            {/* Passo 1 */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div className="order-2 lg:order-1">
+                <img
+                  src={passo1Hands}
+                  alt="Passo 1 - Compartilhe as Memórias"
+                  className="w-full h-auto rounded-lg shadow-lg"
+                />
               </div>
-              <div className="flex-1">
-                <h3 className="text-2xl font-semibold mb-3">Passo 1</h3>
-                <h4 className="text-xl font-semibold mb-2 text-primary">Compartilhe as Memórias</h4>
-                <p className="text-muted-foreground text-lg">
+              <div className="order-1 lg:order-2">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
+                    <span className="text-sm font-bold text-gray-600">01</span>
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-800">Passo 1</h3>
+                </div>
+                <h4 className="text-xl font-bold mb-3 text-gray-800">Compartilhe as Memórias</h4>
+                <p className="text-base text-gray-600">
                   Envie fotos, vídeos, histórias e detalhes sobre a pessoa amada.
                   Quanto mais você compartilhar, mais rico será o memorial.
                 </p>
               </div>
             </div>
 
-            <div className="flex flex-col md:flex-row items-start gap-8">
-              <div className="w-16 h-16 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-2xl font-bold shrink-0">
-                2
-              </div>
-              <div className="flex-1">
-                <h3 className="text-2xl font-semibold mb-3">Passo 2</h3>
-                <h4 className="text-xl font-semibold mb-2 text-primary">Nós Criamos a Magia</h4>
-                <p className="text-muted-foreground text-lg">
+            {/* Passo 2 */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div className="order-2">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
+                    <span className="text-sm font-bold text-gray-600">02</span>
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-800">Passo 2</h3>
+                </div>
+                <h4 className="text-xl font-bold mb-3 text-gray-800">Nós Criamos a Magia</h4>
+                <p className="text-base text-gray-600">
                   Você mesmo monta o perfil do memorial: escreve a biografia, organiza as
                   fotos e vídeos como preferir, igual a um perfil de Instagram ou Facebook.
                   Nossa equipe cuida apenas da criação de música exclusiva personalizada.
                 </p>
               </div>
+              <div className="order-1 lg:order-3">
+                <img
+                  src={passo2Placa}
+                  alt="Passo 2 - Nós Criamos a Magia"
+                  className="w-full h-auto rounded-lg shadow-lg"
+                />
+              </div>
             </div>
 
-            <div className="flex flex-col md:flex-row items-start gap-8">
-              <div className="w-16 h-16 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-2xl font-bold shrink-0">
-                3
+            {/* Passo 3 */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div className="order-2 lg:order-1">
+                <img
+                  src={passo3PlacaRosa}
+                  alt="Passo 3 - Receba e Eternize"
+                  className="w-full h-auto rounded-lg shadow-lg"
+                />
               </div>
-              <div className="flex-1">
-                <h3 className="text-2xl font-semibold mb-3">Passo 3</h3>
-                <h4 className="text-xl font-semibold mb-2 text-primary">Receba e Eternize</h4>
-                <p className="text-muted-foreground text-lg">
+              <div className="order-1 lg:order-2">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
+                    <span className="text-sm font-bold text-gray-600">03</span>
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-800">Passo 3</h3>
+                </div>
+                <h4 className="text-xl font-bold mb-3 text-gray-800">Receba e Eternize</h4>
+                <p className="text-base text-gray-600">
                   Você recebe o link do memorial digital pronto + a música personalizada
                   (com direito a ajustes). Dependendo do plano escolhido, você também
                   recebe a placa física de inox com QR Code para instalar no túmulo.
@@ -351,14 +417,11 @@ const Index = () => {
       </section>
 
       {/* Pricing Section */}
-      <section id="planos" className="py-20 px-6 bg-secondary/10">
+      <section id="planos" className="py-20 px-6 bg-gray-50">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-4 text-primary">
-            Escolha O Plano Ideal Para
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 text-gray-800">
+            Escolha o plano ideal para eternizar essa história
           </h2>
-          <h3 className="text-3xl font-bold text-center mb-16 text-primary">
-            Eternizar Essa História
-          </h3>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Plano 1: Digital com QR */}
@@ -643,23 +706,33 @@ const Index = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-6 text-primary">
-            Não Deixe Que O Tempo Apague<br />O Que O Amor Construiu
-          </h2>
-          <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
-            A cada dia que passa, uma memória se torna mais distante.
-            Mas não precisa ser assim. Transforme a saudade em legado
-            eterno e crie um lugar onde cada lembrança ganha vida.
-          </p>
-          <Button
-            size="lg"
-            className="text-lg px-12 py-6"
-            onClick={handleCreateMemorial}
-          >
-            Criar Memorial Agora
-          </Button>
+      <section className="py-16 px-6 bg-pink-50">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-800">
+                Não deixe que o tempo apague<br />o que o amor construiu
+              </h2>
+              <p className="text-base text-gray-600 mb-8">
+                A cada dia que passa, uma memória se torna mais distante.
+                Mas não precisa ser assim. Transforme a saudade em legado
+                eterno e crie um lugar onde cada lembrança ganha vida.
+              </p>
+              <Button
+                size="lg"
+                className="text-base px-10 py-6 bg-primary hover:bg-primary/90 rounded-md"
+                onClick={handleCreateMemorial}
+              >
+                Criar Memorial Agora
+              </Button>
+            </div>
+            <div className="flex justify-center">
+              <div className="text-center">
+                <div className="text-6xl mb-4">🧓👵</div>
+                <p className="text-sm text-gray-500 italic">QR Code de exemplo</p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
