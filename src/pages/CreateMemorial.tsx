@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,27 @@ const CreateMemorial = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) {
+        navigate("/auth");
+      } else {
+        setUser(session.user);
+      }
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (!session) {
+        navigate("/auth");
+      } else {
+        setUser(session.user);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
 
   // Form states
   const [name, setName] = useState("");
@@ -104,6 +125,12 @@ const CreateMemorial = () => {
         );
       }
 
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        throw new Error("Você precisa estar logado para criar um memorial");
+      }
+
       // Create memorial
       const { data: memorial, error: memorialError } = await supabase
         .from("memorials")
@@ -118,6 +145,7 @@ const CreateMemorial = () => {
           profile_image: profileImageUrl,
           music_file: musicFileUrl,
           music_name: musicName,
+          user_id: user.id,
         })
         .select()
         .single();

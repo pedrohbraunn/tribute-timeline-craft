@@ -252,70 +252,68 @@ const Memorial = () => {
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <div
-        className="relative h-[60vh] bg-cover bg-center"
+        className="relative h-[50vh] md:h-[60vh] bg-cover bg-center"
         style={{
-          backgroundImage: `url(${memorial.background_image || heroDefault})`,
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url(${memorial.background_image || heroDefault})`,
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-black/60" />
-        <div className="absolute top-8 left-8">
-          <h1 className="text-2xl font-serif text-white">ETERNO RECORDAR</h1>
+        <div className="absolute top-6 left-6 md:top-8 md:left-8">
+          <h1 className="text-xl md:text-2xl font-serif text-white flex items-center gap-2">
+            <span className="text-2xl">❤️</span> ETERNO RECORDAR
+          </h1>
+          <p className="text-white/80 text-sm md:text-base italic">Amor que transcende o tempo</p>
         </div>
       </div>
 
       {/* Profile Section */}
-      <div className="relative max-w-5xl mx-auto px-6 -mt-24">
-        <div className="text-center mb-12">
+      <div className="relative max-w-4xl mx-auto px-4 md:px-6 -mt-20 md:-mt-24 mb-12">
+        <div className="text-center">
           {memorial.profile_image && (
             <div className="inline-block mb-6">
               <img
                 src={memorial.profile_image}
                 alt={memorial.name}
-                className="w-40 h-40 rounded-full border-8 border-background object-cover shadow-xl"
+                className="w-32 h-32 md:w-40 md:h-40 rounded-full border-8 border-background object-cover shadow-2xl"
               />
             </div>
           )}
-          <h1 className="text-4xl font-bold text-primary mb-4">{memorial.name}</h1>
-          <div className="flex items-center justify-center gap-4 text-muted-foreground mb-4">
-            <span>
-              {new Date(memorial.birth_date).toLocaleDateString("pt-BR")}
-            </span>
-            <span>•</span>
-            <span>
-              {new Date(memorial.death_date).toLocaleDateString("pt-BR")}
-            </span>
+          <h1 className="text-3xl md:text-4xl font-bold mb-3 text-foreground">{memorial.name}</h1>
+          <div className="flex items-center justify-center gap-3 text-muted-foreground text-sm md:text-base mb-4">
+            <span>🕊️ {new Date(memorial.birth_date).toLocaleDateString("pt-BR")}</span>
+            <span>-</span>
+            <span>🕊️ {new Date(memorial.death_date).toLocaleDateString("pt-BR")}</span>
           </div>
           {memorial.brief_description && (
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto italic">
-              "{memorial.brief_description}"
+            <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              {memorial.brief_description}
             </p>
           )}
         </div>
 
         {/* Photo Gallery */}
         {photos.length > 0 && (
-          <Card className="p-8 mb-12">
-            <h2 className="text-3xl font-semibold text-center mb-8 text-primary">
+          <div className="mb-16">
+            <h2 className="text-2xl md:text-3xl font-semibold text-center mb-8 text-foreground">
               Memórias em imagens
             </h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
               {photos.map((photo) => (
-                <div key={photo.id} className="aspect-square">
+                <div key={photo.id} className="aspect-square overflow-hidden rounded-lg">
                   <img
                     src={photo.photo_url}
                     alt="Memória"
-                    className="w-full h-full object-cover rounded-lg shadow-md hover:scale-105 transition-transform"
+                    className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
                   />
                 </div>
               ))}
             </div>
-          </Card>
+          </div>
         )}
 
         {/* Life Story */}
         {memorial.life_story && (
-          <Card className="p-8 mb-12 bg-card/80 backdrop-blur">
-            <h2 className="text-3xl font-semibold text-center mb-8 text-primary">
+          <Card className="p-6 md:p-10 mb-16 bg-muted/30">
+            <h2 className="text-2xl md:text-3xl font-semibold text-center mb-6 text-foreground">
               História de Vida
             </h2>
             <p className="text-lg text-foreground leading-relaxed whitespace-pre-wrap text-center max-w-3xl mx-auto">
@@ -326,80 +324,73 @@ const Memorial = () => {
 
         {/* Music Section */}
         {memorial.music_file && (
-          <Card className="p-8 mb-12">
-            <h2 className="text-3xl font-semibold text-center mb-8 text-primary">Música</h2>
+          <Card className="p-6 md:p-10 mb-16 bg-muted/30">
+            <h2 className="text-2xl md:text-3xl font-semibold text-center mb-4 text-foreground">Música</h2>
             
-            {memorial.life_story && (
-              <p className="text-center text-muted-foreground mb-6 max-w-2xl mx-auto">
-                {memorial.life_story.substring(0, 200)}...
+            {memorial.music_name && (
+              <p className="text-center text-muted-foreground mb-8">
+                {memorial.music_name}
               </p>
             )}
 
-            {/* Photo Carousel */}
+            {/* Photo Row - Show first 3 photos */}
             {photos.length > 0 && (
-              <div className="mb-8 max-w-3xl mx-auto">
-                <Carousel className="w-full">
-                  <CarouselContent>
-                    {photos.map((photo) => (
-                      <CarouselItem key={photo.id} className="md:basis-1/2 lg:basis-1/3">
-                        <div className="p-2">
-                          <img
-                            src={photo.photo_url}
-                            alt="Memória"
-                            className="w-full aspect-square object-cover rounded-lg shadow-md"
-                          />
-                        </div>
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
-                  <CarouselPrevious />
-                  <CarouselNext />
-                </Carousel>
+              <div className="mb-8 max-w-2xl mx-auto">
+                <div className="grid grid-cols-3 gap-3 md:gap-4">
+                  {photos.slice(0, 3).map((photo) => (
+                    <div key={photo.id} className="aspect-square overflow-hidden rounded-lg">
+                      <img
+                        src={photo.photo_url}
+                        alt="Memória"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
 
             {/* Music Player */}
-            <div className="bg-background rounded-lg p-6 max-w-3xl mx-auto border">
-              <div className="flex items-center gap-6 mb-4">
-                {/* Music Info */}
-                <div className="flex-shrink-0">
-                  <p className="font-semibold text-foreground">{memorial.music_name || "Música"}</p>
-                  <p className="text-sm text-muted-foreground">
-                    Composição personalizada criada especialmente para Maria Lucia de Souza
-                  </p>
-                </div>
-
+            <div className="bg-background/60 rounded-lg p-4 md:p-6 max-w-2xl mx-auto">
+              <div className="flex flex-col md:flex-row items-center gap-4 mb-4">
                 {/* Player Controls */}
-                <div className="flex items-center gap-2 mx-auto">
+                <div className="flex items-center gap-2">
                   <Button
                     size="icon"
                     variant="ghost"
                     onClick={handleSkipBackward}
-                    className="h-10 w-10"
+                    className="h-8 w-8"
                   >
-                    <SkipBack className="h-5 w-5" />
+                    <SkipBack className="h-4 w-4" />
                   </Button>
                   <Button
                     size="icon"
                     variant="outline"
                     onClick={handlePlayPause}
-                    className="h-12 w-12 rounded-full"
+                    className="h-10 w-10 rounded-full"
                   >
-                    {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
+                    {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
                   </Button>
                   <Button
                     size="icon"
                     variant="ghost"
                     onClick={handleSkipForward}
-                    className="h-10 w-10"
+                    className="h-8 w-8"
                   >
-                    <SkipForward className="h-5 w-5" />
+                    <SkipForward className="h-4 w-4" />
                   </Button>
                 </div>
 
+                {/* Time Display */}
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <span>{formatTime(currentTime)}</span>
+                  <span>/</span>
+                  <span>{formatTime(duration)}</span>
+                </div>
+
                 {/* Volume Control */}
-                <div className="flex items-center gap-2 flex-shrink-0">
-                  <Volume2 className="h-5 w-5 text-muted-foreground" />
+                <div className="flex items-center gap-2 ml-auto">
+                  <Volume2 className="h-4 w-4 text-muted-foreground" />
                   <Slider
                     value={[volume]}
                     onValueChange={handleVolumeChange}
@@ -410,21 +401,15 @@ const Memorial = () => {
                 </div>
               </div>
 
-              {/* Timeline */}
-              <div className="flex items-center gap-4">
-                <span className="text-sm text-muted-foreground w-12 text-right">
-                  {formatTime(currentTime)}
-                </span>
+              {/* Progress Bar */}
+              <div>
                 <Slider
                   value={[currentTime]}
                   onValueChange={handleSeek}
                   max={duration || 100}
                   step={0.1}
-                  className="flex-1"
+                  className="w-full"
                 />
-                <span className="text-sm text-muted-foreground w-12">
-                  {formatTime(duration)}
-                </span>
               </div>
             </div>
 
@@ -440,20 +425,23 @@ const Memorial = () => {
 
         {/* Timeline */}
         {timelineEvents.length > 0 && (
-          <Card className="p-8 mb-12">
-            <h2 className="text-3xl font-semibold text-center mb-8 text-primary">
+          <Card className="p-6 md:p-10 mb-16 bg-muted/30">
+            <h2 className="text-2xl md:text-3xl font-semibold text-center mb-10 text-foreground">
               Linha do Tempo
             </h2>
-            <div className="space-y-6">
+            <div className="space-y-8 max-w-2xl mx-auto">
               {timelineEvents.map((event) => (
-                <div key={event.id} className="flex items-center gap-6">
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 rounded-full bg-primary" />
-                    <span className="font-semibold text-xl w-20">
+                <div key={event.id} className="flex gap-4 md:gap-6">
+                  <div className="flex flex-col items-center">
+                    <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-primary flex-shrink-0 mt-2" />
+                    <div className="w-px h-full bg-border mt-2" />
+                  </div>
+                  <div className="flex-1 pb-4">
+                    <span className="font-semibold text-lg md:text-xl text-foreground block mb-1">
                       {new Date(event.event_date).getFullYear()}
                     </span>
+                    <p className="text-sm md:text-base text-muted-foreground">{event.description}</p>
                   </div>
-                  <p className="text-lg text-muted-foreground">{event.description}</p>
                 </div>
               ))}
             </div>
@@ -461,34 +449,37 @@ const Memorial = () => {
         )}
 
         {/* Tribute Form */}
-        <Card className="p-8 mb-12">
-          <h2 className="text-3xl font-semibold text-center mb-8 text-primary">
+        <Card className="p-6 md:p-10 mb-16 bg-muted/30">
+          <h2 className="text-2xl md:text-3xl font-semibold text-center mb-2 text-foreground">
             Deixe sua homenagem de carinho
           </h2>
-          <form onSubmit={handleSubmitTribute} className="max-w-2xl mx-auto space-y-4">
+          <p className="text-center text-muted-foreground mb-8 text-sm md:text-base">
+            Nome ** Deixe seu recado, foto ou vídeo da pessoa. Sua mensagem será valiosa para os amigos e familiares da pessoa!
+          </p>
+          <form onSubmit={handleSubmitTribute} className="max-w-2xl mx-auto space-y-6">
             <div>
-              <Label htmlFor="name">Seu nome</Label>
               <Input
                 id="name"
                 value={tributeName}
                 onChange={(e) => setTributeName(e.target.value)}
                 required
-                placeholder="Digite seu nome"
+                placeholder="Nome **"
+                className="text-base"
               />
             </div>
             <div>
-              <Label htmlFor="message">Sua mensagem</Label>
               <Textarea
                 id="message"
                 value={tributeMessage}
                 onChange={(e) => setTributeMessage(e.target.value)}
                 required
-                placeholder="Escreva sua homenagem..."
-                rows={5}
+                placeholder="Deixe seu recado, foto ou vídeo da pessoa. Sua mensagem será valiosa para os amigos e familiares da pessoa!"
+                rows={6}
+                className="text-base"
               />
             </div>
             <div className="text-center">
-              <Button type="submit" disabled={submittingTribute}>
+              <Button type="submit" disabled={submittingTribute} size="lg">
                 {submittingTribute ? "Enviando..." : "Enviar Homenagem"}
               </Button>
             </div>
@@ -496,14 +487,18 @@ const Memorial = () => {
 
           {/* Display tributes */}
           {tributes.length > 0 && (
-            <div className="mt-12 space-y-6">
-              <h3 className="text-2xl font-semibold text-center text-primary">Homenagens</h3>
+            <div className="mt-12 space-y-6 max-w-2xl mx-auto">
+              <h3 className="text-xl md:text-2xl font-semibold text-center text-foreground mb-6">Homenagens Recebidas</h3>
               {tributes.map((tribute) => (
-                <div key={tribute.id} className="border-l-4 border-primary pl-6 py-4">
-                  <p className="font-semibold mb-2">{tribute.author_name}</p>
-                  <p className="text-muted-foreground italic">"{tribute.message}"</p>
-                  <p className="text-sm text-muted-foreground mt-2">
-                    {new Date(tribute.created_at).toLocaleDateString("pt-BR")}
+                <div key={tribute.id} className="bg-background/60 rounded-lg p-6 border border-border">
+                  <p className="font-semibold mb-2 text-foreground">{tribute.author_name}</p>
+                  <p className="text-muted-foreground mb-3">"{tribute.message}"</p>
+                  <p className="text-xs text-muted-foreground">
+                    {new Date(tribute.created_at).toLocaleDateString("pt-BR", {
+                      day: '2-digit',
+                      month: 'long',
+                      year: 'numeric'
+                    })}
                   </p>
                 </div>
               ))}
@@ -512,28 +507,40 @@ const Memorial = () => {
         </Card>
 
         {/* QR Code Section */}
-        <Card className="p-8 mb-12 text-center">
-          <h2 className="text-3xl font-semibold mb-6 text-primary">
-            Compartilhe este memorial
-          </h2>
-          <p className="text-muted-foreground mb-6">
-            Escaneie o código QR para acessar esta homenagem
-          </p>
-          <div className="flex justify-center">
-            <div className="bg-white p-6 rounded-lg shadow-lg inline-block">
-              <QRCodeSVG value={memorialUrl} size={200} />
+        <div className="mb-16 bg-muted/20 rounded-lg p-6 md:p-10">
+          <div className="grid md:grid-cols-2 gap-8 items-center max-w-4xl mx-auto">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-foreground">
+                Crie um memorial inesquecível
+              </h2>
+              <p className="text-muted-foreground mb-6 text-sm md:text-base">
+                Preserve as memórias de quem você ama. Comece agora a criar um memorial especial.
+              </p>
+              <div className="flex justify-center md:justify-start">
+                <div className="bg-white p-4 rounded-lg shadow-lg inline-block">
+                  <QRCodeSVG value={memorialUrl} size={160} />
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-center">
+              <div className="text-center text-6xl md:text-8xl">
+                💐👤
+              </div>
             </div>
           </div>
-          <p className="text-sm text-muted-foreground mt-6 break-all">{memorialUrl}</p>
-        </Card>
+        </div>
 
         {/* Footer */}
-        <footer className="text-center py-12 border-t">
+        <footer className="text-center py-12 border-t mt-12">
           <div className="mb-6">
-            <h3 className="text-2xl font-serif mb-2">ETERNO RECORDAR</h3>
-            <p className="text-muted-foreground italic">Amor que transcende o tempo</p>
+            <h3 className="text-xl md:text-2xl font-serif mb-2 flex items-center justify-center gap-2">
+              <span className="text-2xl">❤️</span> ETERNO RECORDAR
+            </h3>
+            <p className="text-muted-foreground italic text-sm md:text-base">Amor que transcende o tempo</p>
           </div>
-          <p className="text-sm text-muted-foreground">© 2025 Eterno Recordar. Todos os direitos reservados.</p>
+          <p className="text-xs md:text-sm text-muted-foreground">
+            © 2025 Eterno Recordar • Rua Miguel do Sacramento • Todos os direitos reservados
+          </p>
         </footer>
       </div>
     </div>

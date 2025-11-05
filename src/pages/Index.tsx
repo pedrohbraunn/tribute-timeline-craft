@@ -1,12 +1,74 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Heart, Camera, Music, Clock, MessageCircle, QrCode } from "lucide-react";
+import { Heart, Camera, Music, Clock, MessageCircle, QrCode, LogOut, User } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 import heroImage from "@/assets/hero-memorial.jpg";
 
 const Index = () => {
+  const [user, setUser] = useState<any>(null);
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    toast({
+      title: "Logout realizado",
+      description: "Até logo!",
+    });
+  };
+
+  const handleCreateMemorial = () => {
+    if (!user) {
+      navigate("/auth");
+    } else {
+      navigate("/criar-memorial");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="absolute top-0 right-0 p-6 z-10">
+        {user ? (
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 text-white bg-black/30 px-4 py-2 rounded-full backdrop-blur-sm">
+              <User className="h-4 w-4" />
+              <span className="text-sm">{user.email}</span>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleSignOut}
+              className="bg-white/10 hover:bg-white/20 text-white border-white/30"
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+              Sair
+            </Button>
+          </div>
+        ) : (
+          <Link to="/auth">
+            <Button variant="outline" className="bg-white/10 hover:bg-white/20 text-white border-white/30">
+              Entrar
+            </Button>
+          </Link>
+        )}
+      </header>
+
       {/* Hero Section */}
       <section
         className="relative h-[80vh] bg-cover bg-center flex items-center justify-center"
@@ -23,11 +85,13 @@ const Index = () => {
             Crie um memorial inesquecível para homenagear quem você ama. 
             Preserve memórias, compartilhe histórias e celebre uma vida especial.
           </p>
-          <Link to="/criar-memorial">
-            <Button size="lg" className="text-lg px-12 py-6 bg-primary hover:bg-primary/90">
-              Criar Memorial
-            </Button>
-          </Link>
+          <Button 
+            size="lg" 
+            className="text-lg px-12 py-6 bg-primary hover:bg-primary/90"
+            onClick={handleCreateMemorial}
+          >
+            Criar Memorial
+          </Button>
         </div>
       </section>
 
@@ -165,11 +229,13 @@ const Index = () => {
             Preserve as memórias e celebre a vida de quem você ama. 
             Comece agora e crie uma homenagem especial que durará para sempre.
           </p>
-          <Link to="/criar-memorial">
-            <Button size="lg" className="text-lg px-12 py-6">
-              Começar Agora
-            </Button>
-          </Link>
+          <Button 
+            size="lg" 
+            className="text-lg px-12 py-6"
+            onClick={handleCreateMemorial}
+          >
+            Começar Agora
+          </Button>
         </div>
       </section>
 
