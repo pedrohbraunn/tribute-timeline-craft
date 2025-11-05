@@ -511,14 +511,22 @@ const Memorial = () => {
           <div className="grid md:grid-cols-2 gap-8 items-center max-w-4xl mx-auto">
             <div className="text-center md:text-left">
               <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-foreground">
-                Crie um memorial inesquecível
+                Compartilhe este memorial
               </h2>
               <p className="text-muted-foreground mb-6 text-sm md:text-base">
-                Preserve as memórias de quem você ama. Comece agora a criar um memorial especial.
+                Use este QR Code para compartilhar o memorial. Ao escaneá-lo, as pessoas serão levadas diretamente para esta página com todas as informações, fotos e homenagens.
               </p>
-              <div className="flex justify-center md:justify-start">
+              <div className="flex flex-col items-center md:items-start gap-4">
                 <div className="bg-white p-4 rounded-lg shadow-lg inline-block">
-                  <QRCodeSVG value={memorialUrl} size={160} />
+                  <QRCodeSVG 
+                    value={memorialUrl} 
+                    size={160}
+                    level="H"
+                    includeMargin={true}
+                  />
+                </div>
+                <div className="text-xs text-muted-foreground text-center md:text-left break-all max-w-[200px]">
+                  {memorialUrl}
                 </div>
               </div>
             </div>
