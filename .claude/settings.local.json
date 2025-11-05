@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git clone:*)",
+      "Bash(timeout:*)",
+      "Bash(NUL)",
+      "WebFetch(domain:www.memorizeqr.com.br)",
+      "WebFetch(domain:www.figma.com)",
+      "Bash(git remote add:*)",
+      "Bash(del NUL 2)",
+      "Bash(nul)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
